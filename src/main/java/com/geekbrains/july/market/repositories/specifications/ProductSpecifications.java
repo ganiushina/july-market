@@ -16,6 +16,14 @@ public class ProductSpecifications {
         return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
     }
 
+    public static Specification<Product> titleLike(String title) {
+        return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("title")), '%' + title.toLowerCase() + '%');
+        }
+
+    public static Specification<Product> priceIsEmpty() {
+        return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.isEmpty(root.get("price"));
+    }
 
 }
 
