@@ -29,6 +29,7 @@ public class ProductsController {
         Integer pageNumber = Integer.parseInt(requestParams.getOrDefault("p", "1"));
         ProductFilter productFilter = new ProductFilter(requestParams);
         Page<Product> products = productsService.findAll(productFilter.getSpec(), pageNumber);
+        int totalPages = products.getTotalPages();
         model.addAttribute("products", products);
         model.addAttribute("filterDef", productFilter.getFilterDefinition().toString());
         return "all_products";
@@ -56,4 +57,16 @@ public class ProductsController {
         productsService.saveOrUpdate(product);
         return "redirect:/products/";
     }
+
+
+    @GetMapping("/order_by")
+    public String showAll() {
+
+        List<Product> products = productsService.findAll();
+      //  model.addAttribute("products", products);
+
+        return "redirect:/products/";
+    }
+
+
 }

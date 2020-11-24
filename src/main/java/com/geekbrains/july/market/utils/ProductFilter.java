@@ -32,6 +32,12 @@ public class ProductFilter {
             filterDefinition.append("&title like").append(title);
         }
 
+        if (map.containsKey("price") && !map.get("price").isEmpty()) {
+            int price = Integer.parseInt(map.get("price"));
+            spec = spec.and(ProductSpecifications.priceIsEmpty());
+            filterDefinition.append("&price= null").append(price);
+        }
+
 
     }
 }
