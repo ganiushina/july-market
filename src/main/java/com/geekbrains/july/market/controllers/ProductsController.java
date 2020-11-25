@@ -1,7 +1,9 @@
 package com.geekbrains.july.market.controllers;
 
+import com.geekbrains.july.market.entities.Category;
 import com.geekbrains.july.market.entities.Product;
 import com.geekbrains.july.market.repositories.specifications.ProductSpecifications;
+import com.geekbrains.july.market.services.CategoriesService;
 import com.geekbrains.july.market.services.ProductsService;
 import com.geekbrains.july.market.utils.ProductFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +20,28 @@ import java.util.Map;
 @RequestMapping("/products")
 public class ProductsController {
     private ProductsService productsService;
+    private CategoriesService categoriesService;
 
     @Autowired
-    public ProductsController(ProductsService productsService) {
+    public ProductsController(ProductsService productsService, CategoriesService categoriesService) {
         this.productsService = productsService;
+        this.categoriesService = categoriesService;
     }
 
     @GetMapping
     public String showAll(Model model, @RequestParam Map<String, String> requestParams) {
         Integer pageNumber = Integer.parseInt(requestParams.getOrDefault("p", "1"));
-        ProductFilter productFilter = new ProductFilter(requestParams);
+
+        List<Category> categories  = categoriesService.findAll();
+
+        List<Category> categories1  = null;
+        if (requestParams.get("categories") != null)
+            categories1 = categoriesService.findById(1L);
+
+        ProductFilter productFilter = new ProductFilter(requestParams, categories1);
         Page<Product> products = productsService.findAll(productFilter.getSpec(), pageNumber);
-        int totalPages = products.getTotalPages();
         model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
         model.addAttribute("filterDef", productFilter.getFilterDefinition().toString());
         return "all_products";
     }

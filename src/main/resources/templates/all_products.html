@@ -31,6 +31,29 @@
         <a class="btn btn-primary" th:href="@{'/products'}">Сбросить</a>
     </form>
 
+<!--    <div class="container">-->
+<!--        <div class="dropdown">-->
+<!--            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Выберите фильтр категории-->
+<!--                <span class="caret"></span></button>-->
+<!--            <ul class="dropdown-menu">-->
+<!--                <li th:each="c : ${categories}">-->
+<!--                    <a href="#"><span th:text="${c.name}"></span></a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>--> // почему не выпадает список?
+
+
+
+    <div>
+        <select id="category" name="category">
+            <option th:each="c : ${categories}"
+                    th:value="${c.getId()}"
+                    th:text="${c.getName()}"
+                    th:selected="${param.category !=null ? param.category.equals(c.getId()) : false}"></option> // не приходит id в контроллер
+        </select>
+    </div>
+
     <form th:accept="@{'/products'}" method="get">
         <div class="form-group">
             <label>Введите название товара</label>
@@ -40,6 +63,7 @@
     </form>
 
 
+
     <h4>Список товаров:</h4>
     <table class="table table-striped">
         <thead>
@@ -47,6 +71,7 @@
             <td>Id</td>
             <td>Название</td>
             <td>Цена</td>
+            <td>Категория</td>
             <td>Операции</td>
         </tr>
         </thead>
@@ -56,6 +81,7 @@
             <td th:text="${p.id}"></td>
             <td th:text="${p.title}"></td>
             <td th:text="${p.price}"></td>
+            <td th:text="${p.getCategory().name}"></td>
             <td><a th:href="@{'/products/edit/' + ${p.id}}">Редактировать</a></td>
         </tr>
         </tbody>
