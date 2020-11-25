@@ -1,9 +1,11 @@
 package com.geekbrains.july.market.repositories.specifications;
 
+import com.geekbrains.july.market.entities.Category;
 import com.geekbrains.july.market.entities.Product;
 import org.apache.catalina.valves.rewrite.InternalRewriteMap;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.beans.Expression;
 
@@ -19,10 +21,19 @@ public class ProductSpecifications {
     public static Specification<Product> titleLike(String title) {
         return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(
                 criteriaBuilder.lower(root.get("title")), '%' + title.toLowerCase() + '%');
-        }
+    }
 
     public static Specification<Product> priceIsEmpty() {
         return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.isEmpty(root.get("price"));
+    }
+
+    public static Specification<Product> productCategory(Category category) {
+        return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> {
+            Join join = root.join("categories");
+            return criteriaBuilder.like(
+                criteriaBuilder.lower(join.get("name")), '%' + category.getName() + '%');
+            //return criteriaBuilder.isMember(category, root.get("categories"));
+        };
     }
 
 }
